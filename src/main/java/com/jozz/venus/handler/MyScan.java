@@ -7,7 +7,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE})
 @Documented
-@Import({MyImportBeanDefinitionRegistrar.class})
+@Import({MyImportBeanDefinitionRegistrar.class})//主要为了加载该类
 public @interface MyScan {
 
 }

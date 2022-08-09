@@ -43,7 +43,7 @@
 			<version>8.0.18</version>
 		</dependency>
 		<!-- Druid -->
-		<!--使用druid-spring-boot-starter会报错  Property 'sqlSessionFactory' or 'sqlSessionTemplate' are required-->
+		<!--如使用druid-spring-boot-starter必须在启动类上加exclude类,如@SpringBootApplication(exclude = {DruidDataSourceAutoConfigure.class})否则会报错 Property 'sqlSessionFactory' or 'sqlSessionTemplate' are required-->
 <!--		<dependency>-->
 <!--			<groupId>com.alibaba</groupId>-->
 <!--			<artifactId>druid-spring-boot-starter</artifactId>-->
