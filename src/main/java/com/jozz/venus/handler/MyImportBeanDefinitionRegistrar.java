@@ -11,12 +11,6 @@ import java.util.Set;
 public class MyImportBeanDefinitionRegistrar  implements ImportBeanDefinitionRegistrar  {
     @Override
     public void registerBeanDefinitions(AnnotationMetadata annotationMetadata, BeanDefinitionRegistry beanDefinitionRegistry) {
-//        //这里用到前面定义的MyFactoryBean
-//        BeanDefinitionBuilder builder = BeanDefinitionBuilder.genericBeanDefinition(MyFactoryBean.class);
-//        //生成beanDefinition
-//        GenericBeanDefinition beanDefinition = (GenericBeanDefinition) builder.getBeanDefinition();
-//        //将beanDefinition注册
-//        beanDefinitionRegistry.registerBeanDefinition(QueryDao.class.getName(), beanDefinition);
         //这里一般我们是通过反射获取需要代理的接口的clazz列表
         //比如判断包下面的类，或者通过某注解标注的类等等
         Set<Class> beanClazzs = ClassScaner.scan("com.jozz.venus.dao");

@@ -1,2 +1,42 @@
 server:
   port: 8080
+
+spring:
+  application:
+    name: cloud-shard-7021
+  shardingsphere:
+    datasource:
+      #数据源名称，多数据源以逗号分隔
+      names: ds0
+      ds0:
+        url: jdbc:mysql://localhost:3306/test?useSSl=ture&serverTimezone=UTC&useUnicode=true&characterEncoding=UTF-8
+        username: root
+        password: root
+        type: com.alibaba.druid.pool.DruidDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+    sharding:
+      #未配置分片规则的表将通过默认数据源定位-适用于单库单表，该表无需配置分片规则
+      default-data-source-name: ds0
+      tables:
+        t_order:
+          # 分库键位user_id,每个库分为四库，所以取模4
+#          database-strategy:
+#            inline:
+#              algorithm-expression: ds$->{user_id % 4}
+#              sharding-column: user_id
+          # 分表 分片键位order_id,每个库分为两表，所以取模2
+          table-strategy:
+            inline:
+              algorithm-expression: t_order_000$->{order_id % 2}
+              sharding-column: order_id
+          actual-data-nodes: ds$->{0}.t_order_000$->{0..1}
+    #是否开启SQL显示，默认值: false
+    props:
+      sql:
+        show: true
+
+mybatis:
+  type-aliases-package: com.jozz.venus.domain
+  mapper-locations: classpath:mapper/*Mapper.xml
+  configuration:
+    mapUnderscoreToCamelCase: true

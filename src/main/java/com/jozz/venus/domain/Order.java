@@ -1,22 +1,16 @@
 package com.jozz.venus.domain;
 
-public class Order {
+import lombok.Data;
+
+import java.io.Serializable;
+
+@Data
+public class Order implements Serializable {
+    private static final long serialVersionUID = -466155134525695630L;
+
     private Long id;
-    private String orderNo;
+    private Long orderId;
+    private Long userId;
+    private String userName;
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getOrderNo() {
-        return orderNo;
-    }
-
-    public void setOrderNo(String orderNo) {
-        this.orderNo = orderNo;
-    }
 }

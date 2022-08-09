@@ -23,7 +23,7 @@ public class UserService {
     public void save(){
         Order order = new Order();
         order.setId(14L);
-        order.setOrderNo("NO112");
+        order.setUserName("NO112");
         testDao.save(order);
     }
 

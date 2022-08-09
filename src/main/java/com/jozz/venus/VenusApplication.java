@@ -5,6 +5,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @MyScan
+//@MapperScan("com.jozz.venus.mapper")
 @SpringBootApplication
 public class VenusApplication {
 
