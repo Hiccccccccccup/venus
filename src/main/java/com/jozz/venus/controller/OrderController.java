@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 /**
  * @Author: yipeng
  * @Date: 2021/6/28 23:11
@@ -32,5 +34,22 @@ public class OrderController {
             orderDao.addOrder(order);
         }
         return null;
+    }
+
+    @GetMapping("/query")
+    public List<Order> query(){
+        Order order = new Order();
+        order.setUserId(31L);
+        List<Order> orders = orderDao.getOrders(order);
+        return orders;
+    }
+
+    @GetMapping("/update")
+    public void update(){
+        Order order = new Order();
+        order.setId(2L);
+        order.setOrderId(3L);
+        order.setUserName("里斯本");
+        int i = orderDao.updateOrder(order);
     }
 }

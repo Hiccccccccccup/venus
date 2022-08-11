@@ -18,5 +18,7 @@ public interface OrderDao {
 
     int addOrder(Order orderInfo);
 
+    int updateOrder(Order orderInfo);
+
 }
 

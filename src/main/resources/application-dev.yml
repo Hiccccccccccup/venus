@@ -40,3 +40,17 @@ mybatis:
   mapper-locations: classpath:mapper/*Mapper.xml
   configuration:
     mapUnderscoreToCamelCase: true
+
+application:
+  opensearch:
+    config:
+      hosts: 10.122.147.105
+      port: 9200
+      scheme: https
+      userName: admin
+      password: admin
+      connectTimeout: 10000
+      socketTimeout: 60000
+      connectionRequestTimeout: 10000
+      maxConnTotal: 200 # 数量最优，瓶颈
+      maxConnPerRoute: 200
