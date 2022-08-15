@@ -5,7 +5,9 @@ import lombok.*;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Getter
 @Setter
@@ -28,7 +30,7 @@ public class ESEntity implements Serializable {
     /**
      * 排序条件
      */
-    private Sort sort;
+    private List<Sort> sort;
 
     /**
      * range查询条件
@@ -38,6 +40,10 @@ public class ESEntity implements Serializable {
      * Match查询条件
      */
     private List<Match> matches;
+    /**
+     * match_phrase查询条件
+     */
+    private List<MatchPhrase> matchePhrases;
     /**
      * terms查询条件
      */
@@ -74,6 +80,14 @@ public class ESEntity implements Serializable {
         public static Sort of(String field, String type) {
             return new Sort(field, type);
         }
+
+        public Map<String, Object> toMap4Search(){
+            Map<String, Object> order = new HashMap<>();
+            order.put("order",this.type);
+            Map<String, Object> sortItem = new HashMap<>();
+            sortItem.put(this.field,order);
+            return sortItem;
+        }
     }
 
     @Getter
@@ -99,6 +113,15 @@ public class ESEntity implements Serializable {
 
         public static Range of(String field, Object from, Object to) {
             return new Range(field, from, to);
+        }
+
+        public Map<String, Object> toMap4Search(){
+            HashMap<String, Object> itemMap = new HashMap<>();
+            HashMap<String, Object> valueMap = new HashMap<>();
+            valueMap.put("from",this.from);
+            valueMap.put("to",this.to);
+            itemMap.put(this.field,valueMap);
+            return itemMap;
         }
     }
 
@@ -138,6 +161,43 @@ public class ESEntity implements Serializable {
         public static Match of(String field, Object value) {
             return new Match(field, value);
         }
+
+        public Map<String, Object> toMap4Search(){
+            Map<String, Object> matchValue = new HashMap<>();
+            matchValue.put(this.field,this.value);
+            Map<String, Object> matchItem = new HashMap<>();
+            matchItem.put("match",matchValue);
+            return matchItem;
+        }
+    }
+
+    @Getter
+    @Setter
+    @Accessors(chain = true)
+    @RequiredArgsConstructor
+    public static class MatchPhrase{
+        /**
+         * 条件Key
+         */
+        @NonNull
+        private String field;
+        /**
+         * 条件Value
+         */
+        @NonNull
+        private Object value;
+
+        public static MatchPhrase of(String field, Object value) {
+            return new MatchPhrase(field, value);
+        }
+
+        public Map<String, Object> toMap4Search(){
+            Map<String, Object> matchPhraseValue = new HashMap<>();
+            matchPhraseValue.put(this.field,this.value);
+            Map<String, Object> matchPhraseItem = new HashMap<>();
+            matchPhraseItem.put("match_phrase",matchPhraseValue);
+            return matchPhraseItem;
+        }
     }
 
     @Getter
@@ -160,6 +220,14 @@ public class ESEntity implements Serializable {
 
         public static Terms of(String field, List<Object> value) {
             return new Terms(field, value);
+        }
+
+        public Map<String, Object> toMap4Search(){
+            Map<String, Object> termsValue = new HashMap<>();
+            termsValue.put(this.field,this.value);
+            Map<String, Object> termsItem = new HashMap<>();
+            termsItem.put("terms",termsValue);
+            return termsItem;
         }
     }
 

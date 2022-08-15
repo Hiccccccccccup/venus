@@ -1,5 +1,6 @@
 package com.jozz.venus.controller;
 
+import com.jozz.venus.domain.User;
 import com.jozz.venus.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,6 +28,12 @@ public class UserController {
     @GetMapping("exist")
     public String exist(){
         boolean exist = userService.exist();
+        return "ok";
+    }
+
+    @GetMapping("findOne")
+    public String findOne(){
+        User user = userService.findOne();
         return "ok";
     }
 }
