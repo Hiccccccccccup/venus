@@ -1,19 +1,37 @@
 package com.jozz.venus.handler;
 
+import com.jozz.venus.annotation.DaoScan;
+import com.jozz.venus.util.ClassScaner;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.GenericBeanDefinition;
 import org.springframework.context.annotation.ImportBeanDefinitionRegistrar;
+import org.springframework.core.annotation.AnnotationAttributes;
 import org.springframework.core.type.AnnotationMetadata;
 
+import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * 代理类动态注册器
+ * 将动态代理类注册到Spring管理
+ */
 public class MyImportBeanDefinitionRegistrar  implements ImportBeanDefinitionRegistrar  {
+    /**
+     * @DaoScan注解中保存basePackages的属性名
+     */
+    private final static String BASE_PACKAGES_ATTRIBUTE_NAME = "value";
+
     @Override
     public void registerBeanDefinitions(AnnotationMetadata annotationMetadata, BeanDefinitionRegistry beanDefinitionRegistry) {
-        //这里一般我们是通过反射获取需要代理的接口的clazz列表
-        //比如判断包下面的类，或者通过某注解标注的类等等
-        Set<Class> beanClazzs = ClassScaner.scan("com.jozz.venus.dao");
+        //获取@DaoScan注解上所有的value
+        AnnotationAttributes daoScanAttrs = AnnotationAttributes.fromMap(annotationMetadata.getAnnotationAttributes(DaoScan.class.getName()));
+        String[] basePackagesArray = daoScanAttrs.getStringArray(BASE_PACKAGES_ATTRIBUTE_NAME);
+        //扫描所有basePackage,通过反射获取需要代理的接口的clazz列表
+        Set<Class> beanClazzs = new HashSet<>();
+        for (String basePackages : basePackagesArray) {
+            beanClazzs.addAll(ClassScaner.scan(basePackages));
+        }
         for (Class beanClazz : beanClazzs) {
             BeanDefinitionBuilder builder = BeanDefinitionBuilder.genericBeanDefinition(beanClazz);
             GenericBeanDefinition definition = (GenericBeanDefinition) builder.getRawBeanDefinition();
@@ -30,7 +48,7 @@ public class MyImportBeanDefinitionRegistrar  implements ImportBeanDefinitionReg
             //注意，这里的BeanClass是生成Bean实例的工厂，不是Bean本身。
             // FactoryBean是一种特殊的Bean，其返回的对象不是指定类的一个实例，
             // 其返回的是该工厂Bean的getObject方法所返回的对象。
-            definition.setBeanClass(MyFactoryBean.class);
+            definition.setBeanClass(DaoFactoryBean.class);
 
             //这里采用的是byType方式注入，类似的还有byName等
             definition.setAutowireMode(GenericBeanDefinition.AUTOWIRE_BY_TYPE);

@@ -1,5 +1,6 @@
-package com.jozz.venus.handler;
+package com.jozz.venus.annotation;
 
+import com.jozz.venus.handler.MyImportBeanDefinitionRegistrar;
 import org.springframework.context.annotation.Import;
 
 import java.lang.annotation.*;
@@ -8,6 +9,6 @@ import java.lang.annotation.*;
 @Target({ElementType.TYPE})
 @Documented
 @Import({MyImportBeanDefinitionRegistrar.class})//主要为了加载该类
-public @interface MyScan {
-
+public @interface DaoScan {
+    String[] value() default {};
 }

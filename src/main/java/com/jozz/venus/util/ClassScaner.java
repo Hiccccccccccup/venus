@@ -1,12 +1,9 @@
-package com.jozz.venus.handler;
+package com.jozz.venus.util;
 
 import org.springframework.beans.factory.BeanDefinitionStoreException;
-import org.springframework.context.ResourceLoaderAware;
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
-import org.springframework.core.io.support.ResourcePatternUtils;
 import org.springframework.core.type.classreading.CachingMetadataReaderFactory;
 import org.springframework.core.type.classreading.MetadataReader;
 import org.springframework.core.type.classreading.MetadataReaderFactory;
@@ -17,9 +14,15 @@ import org.springframework.util.SystemPropertyUtils;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;
-import java.util.*;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 
-public class ClassScaner implements ResourceLoaderAware {
+/**
+ * 类扫描工具类
+ */
+public class ClassScaner {
 
     //保存过滤规则要排除的注解
     private final List<TypeFilter> includeFilters = new LinkedList<TypeFilter>();
@@ -28,16 +31,15 @@ public class ClassScaner implements ResourceLoaderAware {
     private ResourcePatternResolver resourcePatternResolver = new PathMatchingResourcePatternResolver();
     private MetadataReaderFactory metadataReaderFactory = new CachingMetadataReaderFactory(this.resourcePatternResolver);
 
-    public static Set<Class> scan(String[] basePackages,
-                                  Class<? extends Annotation>... annotations) {
+    public static Set<Class> scan(String[] basePackages,Class<? extends Annotation>... annotations) {
         ClassScaner cs = new ClassScaner();
-
-        if(annotations != null) {
+        //注解
+        if (annotations != null) {
             for (Class anno : annotations) {
                 cs.addIncludeFilter(new AnnotationTypeFilter(anno));
             }
         }
-
+        //全路径方式
         Set<Class> classes = new HashSet<Class>();
         for (String s : basePackages) {
             classes.addAll(cs.doScan(s));
@@ -49,29 +51,8 @@ public class ClassScaner implements ResourceLoaderAware {
         return ClassScaner.scan(StringUtils.tokenizeToStringArray(basePackages, ","), annotations);
     }
 
-    public final ResourceLoader getResourceLoader() {
-        return this.resourcePatternResolver;
-    }
-
-    @Override
-    public void setResourceLoader(ResourceLoader resourceLoader) {
-        this.resourcePatternResolver = ResourcePatternUtils
-                .getResourcePatternResolver(resourceLoader);
-        this.metadataReaderFactory = new CachingMetadataReaderFactory(
-                resourceLoader);
-    }
-
     public void addIncludeFilter(TypeFilter includeFilter) {
         this.includeFilters.add(includeFilter);
-    }
-
-    public void addExcludeFilter(TypeFilter excludeFilter) {
-        this.excludeFilters.add(0, excludeFilter);
-    }
-
-    public void resetFilters(boolean useDefaultFilters) {
-        this.includeFilters.clear();
-        this.excludeFilters.clear();
     }
 
     public Set<Class> doScan(String basePackage) {
@@ -92,8 +73,7 @@ public class ClassScaner implements ResourceLoaderAware {
                     if ((includeFilters.size() == 0 && excludeFilters.size() == 0)
                             || matches(metadataReader)) {
                         try {
-                            classes.add(Class.forName(metadataReader
-                                    .getClassMetadata().getClassName()));
+                            classes.add(Class.forName(metadataReader.getClassMetadata().getClassName()));
                         } catch (ClassNotFoundException e) {
                             e.printStackTrace();
                         }
@@ -119,10 +99,5 @@ public class ClassScaner implements ResourceLoaderAware {
             }
         }
         return false;
-    }
-
-    public static void main(String[] args) {
-        ClassScaner.scan("com.hjzgg.test.thirdjar.config,com.hjzgg.test.thirdjar.web", null)
-                .forEach(clazz -> System.out.println(clazz));
     }
 }

@@ -1,3 +1,5 @@
 spring:
   profiles:
     active: dev
+
+dao-locations: classpath:***/*/*.xml(地址写自己的)

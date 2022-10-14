@@ -1,10 +1,10 @@
 package com.jozz.venus;
 
-import com.jozz.venus.handler.MyScan;
+import com.jozz.venus.annotation.DaoScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@MyScan
+@DaoScan("com.jozz.venus.dao")
 @SpringBootApplication
 public class VenusApplication {
 

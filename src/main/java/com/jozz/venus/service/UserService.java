@@ -15,13 +15,14 @@ public class UserService {
 
     public void save(){
         User user = new User();
+//        user.setId(1L);
         user.setAge(11);
         user.setName("张三");
         userDao.save(user);
     }
 
     public boolean exist(){
-        return userDao.exist(1L);
+        return userDao.exist(null);
     }
 
     public User findOne(){

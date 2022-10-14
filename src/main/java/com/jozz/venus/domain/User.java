@@ -1,9 +1,10 @@
 package com.jozz.venus.domain;
 
-import com.jozz.venus.handler.Document;
+import com.jozz.venus.annotation.Document;
 
 @Document(indexName = "_user")
 public class User {
+//    @Id
     public Long id;
     public String name;
     public int age;
