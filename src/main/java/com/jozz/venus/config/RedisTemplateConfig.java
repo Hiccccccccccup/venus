@@ -18,7 +18,7 @@ public class RedisTemplateConfig {
 
     /**
      * 注入RedisTemplate<String, Object>
-     *
+     * 主要自定义RedisTemplate的序列化规则
      * @return RedisTemplate
      */
     @Bean
