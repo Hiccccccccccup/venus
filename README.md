@@ -1,3 +1,4 @@
 - Websocket实现IM基础通信,包括私聊和群聊简单实现
 - 动态代理实现接口,并且交给Spring管理
 - Redis BitMap用法
+- 分表分库配置
