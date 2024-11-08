@@ -2,6 +2,7 @@ package com.jozz.venus.controller;
 
 import com.jozz.venus.mapper.OrderDao;
 import com.jozz.venus.domain.Order;
+import com.jozz.venus.mapper.PrivateMsgDelayDao;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,7 +22,8 @@ public class OrderController {
 
     @Autowired
     private OrderDao orderDao;
-
+    @Autowired
+    private PrivateMsgDelayDao privateMsgDelayDao;
     @GetMapping("/insert")
     public String insert() {
         for (int i = 0; i < 1000; i++) {

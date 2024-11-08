@@ -34,4 +34,8 @@ public interface BaseDao<T,ID extends Serializable> {
      * @return
      */
     T findOne(ID id);
+
+
+
+
 }

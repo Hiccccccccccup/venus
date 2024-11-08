@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jozz.venus.mapper.GroupMsgPushOffsetDao">
+  <resultMap id="BaseResultMap" type="com.jozz.venus.domain.GroupMsgPushOffset">
+    <!--@mbg.generated-->
+    <!--@Table t_group_msg_push_offset-->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="group_id" jdbcType="INTEGER" property="groupId" />
+    <result column="last_msg_id" jdbcType="INTEGER" property="lastMsgId" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+
+  <resultMap id="JoinResultMap" type="com.jozz.venus.domain.GroupMsg">
+    <!--@mbg.generated-->
+    <!--@Table t_group_msg-->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="group_id" jdbcType="INTEGER" property="groupId" />
+    <result column="from_id" jdbcType="INTEGER" property="fromId" />
+    <result column="payload" jdbcType="VARCHAR" property="payload" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    id, user_id, group_id, last_msg_id, create_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    <!--@mbg.generated-->
+    select
+    <include refid="Base_Column_List" />
+    from t_group_msg_push_offset
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectByUserId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    <!--@mbg.generated-->
+    select
+    <include refid="Base_Column_List" />
+    from t_group_msg_push_offset
+    where user_id = #{userId,jdbcType=INTEGER}
+  </select>
+  <select id="selectOfflineMsg" parameterType="java.lang.Integer" resultMap="JoinResultMap">
+    <!--@mbg.generated-->
+    SELECT
+    b.*
+    FROM
+    `t_group_msg_push_offset` a
+    LEFT JOIN t_group_msg b ON a.group_id = b.group_id
+    WHERE
+    a.user_id = #{userId}
+    AND b.id > a.last_msg_id
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    <!--@mbg.generated-->
+    delete from t_group_msg_push_offset
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" keyProperty="id" parameterType="com.jozz.venus.domain.GroupMsgPushOffset" useGeneratedKeys="true">
+    <!--@mbg.generated-->
+    insert into t_group_msg_push_offset (user_id, group_id, last_msg_id, create_time)
+    values (#{userId}, #{groupId}, #{lastMsgId}, #{createTime})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.jozz.venus.domain.GroupMsgPushOffset">
+    <!--@mbg.generated-->
+    update t_group_msg_push_offset
+    set user_id = #{userId,jdbcType=INTEGER},
+      group_id = #{groupId,jdbcType=INTEGER},
+      last_msg_id = #{lastMsgId,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateOffset" parameterType="com.jozz.venus.domain.GroupMsgPushOffset">
+    <!--@mbg.generated-->
+    update t_group_msg_push_offset
+    set last_msg_id = #{lastMsgId,jdbcType=INTEGER}
+    where user_id = #{userId,jdbcType=INTEGER} and group_id = #{groupId,jdbcType=INTEGER}
+  </update>
+</mapper>

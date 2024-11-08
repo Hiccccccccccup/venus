@@ -5,7 +5,6 @@ import com.jozz.venus.annotation.Id;
 import com.jozz.venus.util.ESUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-
 import java.io.Serializable;
 import java.lang.reflect.*;
 import static com.jozz.venus.enums.MethodEnum.match;
@@ -17,17 +16,29 @@ import static com.jozz.venus.enums.MethodEnum.match;
  */
 @Slf4j
 public class DaoProxy<T, ID extends Serializable> implements InvocationHandler {
-    //被代理类class
+    /**
+     * 被代理类class
+     */
     private Class<T> interfaceType;
-    //被代理类对应泛型对象class
+    /**
+     * 被代理类对应泛型对象class
+     */
     private Class<T> beanType;
-    //索引名称
+    /**
+     * 索引名称
+     */
     private String indexName;
-    //属性
+    /**
+     * 属性
+     */
     private Field[] declaredFields;
-    //ID Field
+    /**
+     * ID Field
+     */
     private Field idField;
-    //构造方法
+    /**
+     * 构造方法
+     */
     public DaoProxy(Class<T> interfaceType) {
         this.interfaceType = interfaceType;
         this.init();
@@ -78,15 +89,8 @@ public class DaoProxy<T, ID extends Serializable> implements InvocationHandler {
                 if (idField != null) {
                     id = (ID) idField.get(arg);
                 }
-                //属性值获取
-//                for (Field declaredField : declaredFields) {
-//                    Object o = idField.get(arg);
-//                    Object name = declaredField.getName();
-//                    System.out.println(name + "=>" + o);
-//                }
-
                 ESUtils.insert(indexName, id, arg);
-                break;
+                return null;
             }
             case FIND_ONE:{
                 ID id = (ID) args[0];
@@ -105,6 +109,5 @@ public class DaoProxy<T, ID extends Serializable> implements InvocationHandler {
             default:
                 throw new RuntimeException("methed " + methodName + "can not be used!");
         }
-        return null;
     }
 }

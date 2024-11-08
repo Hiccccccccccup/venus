@@ -33,7 +33,19 @@ spring:
     #是否开启SQL显示，默认值: false
     props:
       sql:
-        show: true
+        show: false
+  redis:
+    host: ${REDIS_HOST:10.122.142.43}
+    port: ${REDIS_PORT:6379}
+    jedis:
+      pool:
+        max-active: 50
+        max-idle: 30
+        max-wait: 1000ms
+    ssl: false
+    database: 8
+    password: JLyCO13CLjsO
+
 
 mybatis:
   type-aliases-package: com.jozz.venus.domain

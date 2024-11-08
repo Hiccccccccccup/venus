@@ -14,7 +14,7 @@ public class DaoFactoryBean<T> implements FactoryBean<T> {
 
     @Override
     public T getObject() throws Exception {
-        //利用动态代理生成MyDao的实例对象
+        //利用动态代理生成Dao的实例对象
         Object instance = Proxy.newProxyInstance(DaoFactoryBean.class.getClassLoader(), new Class[]{interfaceType}, new DaoProxy(interfaceType));
         return (T) instance;
     }
